@@ -78,12 +78,13 @@ public class APKeep {
 		eva = new Evaluator(name, outputPath);
 		
 		ArrayList<String> topo = readFile(Paths.get(workingPath, "topo.txt").toString());
+		ArrayList<String> ports = readFile(Paths.get(workingPath, "ports.txt").toString());
 		ArrayList<String> devices = readFile(Paths.get(workingPath, "devices.txt").toString());
 		Map<String, Set<String>> device_acls = readACLs(Paths.get(workingPath, "acls").toString());
 		Map<String, Map<String, Set<String>>> vlan_ports = readVlans(Paths.get(workingPath, "vlan.txt").toString());
 		Map<String, Set<String>> device_nats = readNATs(Paths.get(workingPath, "nat.txt").toString());
 		
-		net.initializeNetwork(topo, devices, device_acls, vlan_ports, device_nats);
+		net.initializeNetwork(topo, devices, ports, device_acls, vlan_ports, device_nats);
 	}
 
 	private static void parseParameters(JSONObject paras) {
@@ -109,7 +110,7 @@ public class APKeep {
 
 	public static void update() {
 		try {
-			net.run(eva, Paths.get(workingPath, "updates").toString());
+			net.run(eva, Paths.get(workingPath, "updates.txt").toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -136,6 +137,10 @@ public class APKeep {
 
 	public static void dumpLoops(PrintStream printer) {
 		eva.printLoop(printer);
+	}
+
+	public static void dumpBlackHole(PrintStream printer) {
+		printer.println(net.getDnaUnreachable());
 	}
 	
 	public static ArrayList<String> readFile(String inputFile) throws IOException{

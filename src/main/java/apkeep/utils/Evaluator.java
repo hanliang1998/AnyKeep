@@ -42,6 +42,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -55,6 +58,7 @@ public class Evaluator {
 	int fast_update;
 	
 	Set<Loop> loops;
+	HashMap<String, ArrayList<String>> dna_unreachable = new HashMap<>();
 	
 	int ap_insert_num;
 	int ap_end_num;
@@ -104,6 +108,10 @@ public class Evaluator {
 	
 	public void addLoops(Set<Loop> loops) {
 		this.loops.addAll(loops);
+	}
+
+	public void addBlackHole(HashMap<String, ArrayList<String>> dna_unreachable) {
+		this.dna_unreachable = dna_unreachable;
 	}
 	
 	public void startUpdate() {
@@ -202,6 +210,12 @@ public class Evaluator {
 		System.out.println("Number of APs after update: " + ap_end_num);
 		
 		System.out.println("Number of loops: " + loops.size());
+
+		int total = 0;
+		for (ArrayList<String> current : dna_unreachable.values()) {
+			total += current.size();
+		}
+		System.out.println("Number of blackHole: " + total);
 
 		System.out.println("Average update time: " + total_time/update_num/1000.0 + "us");
 		System.out.println(fast_update*100.0/update_num + "% < " + Parameters.FAST_UPDATE_THRESHOLD + "ms");	

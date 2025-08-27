@@ -76,7 +76,7 @@ public class ExampleExp {
 	}
 	
 	private static void runUpdates() throws Exception {
-		net.initializeNetwork(topo, devices, device_acls, vlan_ports, device_nats);
+		net.initializeNetwork(topo,devices,null,  device_acls, vlan_ports, device_nats);
 		net.run(eva, updateFile);
 		eva.printExpResults();
 	}

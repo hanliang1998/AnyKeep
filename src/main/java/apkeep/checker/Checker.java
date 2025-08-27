@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import apkeep.core.APKeeper;
 import apkeep.core.Network;
 import apkeep.elements.ACLElement;
 import apkeep.elements.Element;
@@ -56,12 +57,18 @@ public class Checker {
 	
 	Network net;
 	Set<Loop> loops;
+	Set<String> dna_reachable;
 	
 	public Checker(Network net) {
 		this.net = net;
 		loops = new HashSet<>();
+		dna_reachable = new HashSet<>();
 	}
-	
+
+	public Set<String> getDNAReachable() {
+		return dna_reachable;
+	}
+
 	public Set<Loop> getLoops() {
 		return loops;
 	}
@@ -134,8 +141,10 @@ public class Checker {
 		}
 	}
 
-	public void checkProperty(String element_name, Set<Integer> moved_aps) {
-		loops.clear();
+	public void checkProperty(String element_name, Set<Integer> moved_aps , boolean isCheckBlackHole) {
+		if(!isCheckBlackHole){
+			loops.clear();
+		}
 		
 		Element e = net.getElement(element_name);
 		for(String port : e.getPorts()) {
@@ -208,6 +217,11 @@ public class Checker {
 		for(PositionTuple connected_pt : net.getConnectedPorts(cur_hop)) {
 			String next_node = connected_pt.getDeviceName();
 			Element e = getElement(next_node);
+
+			/*
+			* check black hole
+			*/
+			checkTarget(fwd_aps, e);
 			for(String port : e.getPorts()) {
 				if(port.equals(connected_pt.getPortName())) continue;
 				Set<Integer> aps = e.forwardAPs(port, fwd_aps);
@@ -278,6 +292,21 @@ public class Checker {
 			return true;
 		}
 		return false;
+	}
+
+	/*
+	 * if current port dna contained any target dna , record it as reachable
+	 */
+	private void checkTarget( Set<Integer> fwd_aps, Element e) {
+			if(e == null) return;
+			HashSet<String> current_dna = new HashSet<> (e.getPortDNA().values());
+			HashSet<String> total_dna = APKeeper.getAPPrefixes(fwd_aps);
+			for(String dna : total_dna) {
+				String[] token = dna.split("/");
+				if(current_dna.contains(token[0])) {
+					dna_reachable.add(token[0]);
+				}
+			}
 	}
 	
 	private Element getElement(String node_name) {

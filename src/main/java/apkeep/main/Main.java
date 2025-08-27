@@ -86,6 +86,7 @@ public class Main {
                  String content = pl.words().get(1);
                  switch (content) {
                      case "loops" : APKeep.dumpLoops(System.out); break;
+                     case "blackhole" : APKeep.dumpBlackHole(System.out); break;
                      default: usage();
                  }
              }
@@ -104,6 +105,7 @@ public class Main {
                 "    update [<changes>]                 push rule changes on the init",
                 "    check whatif                       answer \"what if\" questions for each possible link failure",
                 "    dump loops                         dump loops",
+                "    dump blackhole                     dump blackhole",
                 "    exit                               exit apkeep"
         };
 

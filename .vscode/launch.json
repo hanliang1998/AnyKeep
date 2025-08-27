@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "FullMeshTopologyGenerator",
+            "request": "launch",
+            "mainClass": "FullMeshTopologyGenerator",
+            "projectName": "apkeep"
+        },
+        {
+            "type": "java",
+            "name": "UBMeshWithForwardingTable",
+            "request": "launch",
+            "mainClass": "UBMeshWithForwardingTable",
+            "projectName": "apkeep"
+        },
+        {
+            "type": "java",
+            "name": "Debug ExampleExp",
+            "request": "launch",
+            "mainClass": "apkeep.main.Main",
+            "projectName": "apkeep",
+            "args": [
+                "init ./networks/stanford"
+            ],
+            "vmArgs": "-Xms1024m -Xmx8192m"
+        }
+    ]
+}

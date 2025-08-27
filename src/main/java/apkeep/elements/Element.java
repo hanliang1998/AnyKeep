@@ -63,13 +63,26 @@ public abstract class Element {
 	
 	protected static BDDACLWrapper bdd;
 	protected APKeeper apk;
+	Set<Integer> target_BDD;
 	
 	protected Map<String, Set<Integer>> port_aps_raw;
+	protected Map<String, String> port_dna; // port's dna
 	
 	public Element(String ename) {
 		name = ename;
 		port_aps_raw = new HashMap<>();
+		target_BDD = new HashSet<>();
+		port_dna = new HashMap<>();
 	}
+
+	public Map<String, String> getPortDNA(){
+		return port_dna;
+	}
+	
+	public Set<Integer> getTargetBDD() {
+		return target_BDD;
+	}
+
 
 	public static void setBDDWrapper(BDDACLWrapper bdd_engine) {
 		bdd = bdd_engine;

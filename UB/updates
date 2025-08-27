@@ -1,0 +1,16 @@
++ fwd node4 0 8 self 8
++ fwd node4 167904001 32 Ethernet0/2 8
++ fwd node4 167969537 32 Ethernet0/3 8
++ fwd node4 167838465 32 Ethernet0/1 8
++ fwd node2 0 8 self 8
++ fwd node2 168034817 32 Ethernet0/3 8
++ fwd node2 167969281 32 Ethernet0/2 8
++ fwd node2 167837953 32 Ethernet0/1 8
++ fwd node3 0 8 self 8
++ fwd node3 168035073 32 Ethernet0/3 8
++ fwd node3 167903745 32 Ethernet0/2 8
++ fwd node3 167838209 32 Ethernet0/1 8
++ fwd node1 0 8 self 8
++ fwd node1 168034561 32 Ethernet0/3 8
++ fwd node1 167903489 32 Ethernet0/1 8
++ fwd node1 167969025 32 Ethernet0/2 8
