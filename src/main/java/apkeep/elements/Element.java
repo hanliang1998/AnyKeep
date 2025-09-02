@@ -66,17 +66,17 @@ public abstract class Element {
 	Set<Integer> target_BDD;
 	
 	protected Map<String, Set<Integer>> port_aps_raw;
-	protected Map<String, String> port_dna; // port's dna
+	protected Map<String, String> port_cna; // port's cna
 	
 	public Element(String ename) {
 		name = ename;
 		port_aps_raw = new HashMap<>();
 		target_BDD = new HashSet<>();
-		port_dna = new HashMap<>();
+		port_cna = new HashMap<>();
 	}
 
-	public Map<String, String> getPortDNA(){
-		return port_dna;
+	public Map<String, String> getPortCNA(){
+		return port_cna;
 	}
 	
 	public Set<Integer> getTargetBDD() {

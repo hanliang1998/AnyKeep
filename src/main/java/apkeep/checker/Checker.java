@@ -57,16 +57,16 @@ public class Checker {
 	
 	Network net;
 	Set<Loop> loops;
-	Set<String> dna_reachable;
+	Set<String> cna_reachable;
 	
 	public Checker(Network net) {
 		this.net = net;
 		loops = new HashSet<>();
-		dna_reachable = new HashSet<>();
+		cna_reachable = new HashSet<>();
 	}
 
-	public Set<String> getDNAReachable() {
-		return dna_reachable;
+	public Set<String> getCNAReachable() {
+		return cna_reachable;
 	}
 
 	public Set<Loop> getLoops() {
@@ -151,7 +151,22 @@ public class Checker {
 			if (port.equals("default") || e.getPortAPs(port).isEmpty()) continue;
 			
 			Set<Integer> aps = new HashSet<>(moved_aps);
+			HashSet<String> target_cna1 = APKeeper.getAPPrefixes(moved_aps);
+			Boolean flag = false;
+			if(target_cna1.contains("10.6.0.14")){
+				flag = true;
+			}
+			HashSet<String> target_cna = APKeeper.getAPPrefixes(e.getPortAPs(port));
+			Boolean flag2 = false;
+			if(target_cna.contains("10.6.0.14")){
+				flag2 = true;
+			}
 			aps.retainAll(e.getPortAPs(port));
+			HashSet<String> target_cna2 = APKeeper.getAPPrefixes(aps);
+			Boolean flag3 = false;
+			if(target_cna2.contains("10.6.0.14")){
+				flag3 = true;
+			}
 			
 			if(aps.isEmpty()) continue;
 			Set<String> ports = getPhysicalPorts(e,port);
@@ -221,7 +236,7 @@ public class Checker {
 			/*
 			* check black hole
 			*/
-			checkTarget(fwd_aps, e);
+			checkTarget(fwd_aps, e,connected_pt.getPortName());
 			for(String port : e.getPorts()) {
 				if(port.equals(connected_pt.getPortName())) continue;
 				Set<Integer> aps = e.forwardAPs(port, fwd_aps);
@@ -295,17 +310,18 @@ public class Checker {
 	}
 
 	/*
-	 * if current port dna contained any target dna , record it as reachable
+	 * if current port cna contained any target cna , record it as reachable
 	 */
-	private void checkTarget( Set<Integer> fwd_aps, Element e) {
+	private void checkTarget( Set<Integer> fwd_aps, Element e, String port) {
 			if(e == null) return;
-			HashSet<String> current_dna = new HashSet<> (e.getPortDNA().values());
-			HashSet<String> total_dna = APKeeper.getAPPrefixes(fwd_aps);
-			for(String dna : total_dna) {
-				String[] token = dna.split("/");
-				if(current_dna.contains(token[0])) {
-					dna_reachable.add(token[0]);
-				}
+			String current_cna =  e.getPortCNA().get(port);
+			String self_cna =  e.getPortCNA().get("self");
+			HashSet<String> total_cna = APKeeper.getAPPrefixes(fwd_aps);
+			if(total_cna.contains(current_cna)) {
+				cna_reachable.add(current_cna);
+			}
+			if(total_cna.contains(self_cna)) {
+				cna_reachable.add(self_cna);
 			}
 	}
 	

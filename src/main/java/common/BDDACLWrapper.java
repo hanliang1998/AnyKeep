@@ -736,6 +736,20 @@ public class BDDACLWrapper implements Serializable{
             return entrybdd;
       }
 
+      public int encodeSrcIPPrefix(long ipaddr)
+      {
+            int[] ipbin = Utility.CalBinRep(ipaddr, ipBits);
+            int entrybdd = EncodePrefix(ipbin, srcIP, ipBits);
+            return entrybdd;
+      }
+
+      public int encodeDstIPPrefix(long ipaddr)
+      {
+            int[] ipbin = Utility.CalBinRep(ipaddr, ipBits);
+            int entrybdd = EncodePrefix(ipbin, dstIP, ipBits);
+            return entrybdd;
+      }
+
       public int encodeMPLSLabel(int label_int)
       {
             int [] label_bin = Utility.CalBinRep(label_int, mplsBits);

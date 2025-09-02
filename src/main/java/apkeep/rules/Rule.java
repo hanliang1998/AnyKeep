@@ -87,7 +87,7 @@ public abstract class Rule implements Comparable<Rule>{
 		if(o instanceof Rule) {
 			Rule another = (Rule) o;
 			return another.priority == priority 
-					&& another.port.equals(port);
+					&& another.port.equals(port) && another.match_bdd == match_bdd;
 		}
 		return false;
 	}

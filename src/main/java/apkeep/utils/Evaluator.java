@@ -58,7 +58,7 @@ public class Evaluator {
 	int fast_update;
 	
 	Set<Loop> loops;
-	HashMap<String, ArrayList<String>> dna_unreachable = new HashMap<>();
+	HashMap<String, ArrayList<String>> cna_unreachable = new HashMap<>();
 	
 	int ap_insert_num;
 	int ap_end_num;
@@ -110,8 +110,8 @@ public class Evaluator {
 		this.loops.addAll(loops);
 	}
 
-	public void addBlackHole(HashMap<String, ArrayList<String>> dna_unreachable) {
-		this.dna_unreachable = dna_unreachable;
+	public void addBlackHole(HashMap<String, ArrayList<String>> cna_unreachable) {
+		this.cna_unreachable = cna_unreachable;
 	}
 	
 	public void startUpdate() {
@@ -212,7 +212,7 @@ public class Evaluator {
 		System.out.println("Number of loops: " + loops.size());
 
 		int total = 0;
-		for (ArrayList<String> current : dna_unreachable.values()) {
+		for (ArrayList<String> current : cna_unreachable.values()) {
 			total += current.size();
 		}
 		System.out.println("Number of blackHole: " + total);

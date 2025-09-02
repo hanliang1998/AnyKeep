@@ -215,6 +215,19 @@ public class APKeeper {
 			return prefixbdd;
 		}
 	}
+
+	public int encodePrefixBDD(long destip) {
+		String prefix = destip + "";
+		if (cachePrefixBDD.containsKey(prefix)) {
+			return cachePrefixBDD.get(prefix);
+		}
+		else {
+			// int prefixbdd = bddengine.encodeDstIPPrefix(destip, prefixlen);
+			int prefixbdd = bddengine.encodeDstIPPrefix(destip);
+			cachePrefixBDD.put(prefix, prefixbdd);
+			return prefixbdd;
+		}
+	}
 	
 	public void removePrefixBDD(long destip, int prefixlen) {
 		String prefix = destip + " " + prefixlen;
@@ -464,11 +477,11 @@ public class APKeeper {
 			while (ap != BDDACLWrapper.BDDFalse) {
 				bddengine.getBDD().oneSat(ap, header);
 				int offset = 32+1;
-				int prefix_len = 32;
+				// int prefix_len = 32;
 				for (int i=0; i<32; i++) {
 					if (header[offset+i] == -1) {
 						dstip[i] = 0;
-						prefix_len --;
+						// prefix_len --;
 					}
 					else {
 						dstip[i] = header[offset + i];
@@ -476,8 +489,10 @@ public class APKeeper {
 				}
 				String ip_prefix = Utility.IpBinToString(dstip);
 				long ip_prefix_long = Utility.IPStringToLong(ip_prefix);
-				ip_prefixs.add(ip_prefix + "/" + prefix_len);
-				int prefix_bdd = bddengine.encodeDstIPPrefix(ip_prefix_long, prefix_len);
+				// ip_prefixs.add(ip_prefix + "/" + prefix_len);
+				// int prefix_bdd = bddengine.encodeDstIPPrefix(ip_prefix_long, prefix_len);
+				ip_prefixs.add(ip_prefix);
+				int prefix_bdd = bddengine.encodeDstIPPrefix(ip_prefix_long);
 				ap = bddengine.diff(ap, prefix_bdd);
 			}
 		}

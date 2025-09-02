@@ -90,7 +90,7 @@ public class Network {
 	 */
 	protected APKeeper fwd_apk; // the APKeeper for forwarding devices
 	protected APKeeper acl_apk; // the APKeeper for ACL devices
-	protected HashMap<String, ArrayList<String>> dna_unreachable = new HashMap<>();
+	protected HashMap<String, ArrayList<String>> cna_unreachable = new HashMap<>();
 
 	private Checker checker;
 	
@@ -126,23 +126,23 @@ public class Network {
 		addNATs(device_nats); // create NATElement and insert it to topology, if any
 		addACLs(device_acls); // create ACLElements, if any
 		addVLANs(vlan_ports); // create VLAN to physic port mapping, if any
-		addPortDNA(ports); // add port DNA information
+		addPortCNA(ports); // add port DNA information
 		initializeAPK();
 	}
 
-	public void addPortDNA(List<String> ports){
+	public void addPortCNA(List<String> ports){
 		if(ports == null) return;
 		for(String port : ports) {
 		String[] tokens = port.split(",");
 		String device = tokens[0];
 		String port_name = tokens[1];
-		String DNA = tokens[2];
-		elements.get(device).getPortDNA().put(port_name, DNA);
+		String CNA = tokens[2];
+		elements.get(device).getPortCNA().put(port_name, CNA);
 		}
 	}
 	
-	public HashMap<String, ArrayList<String>> getDnaUnreachable() {
-		return dna_unreachable;
+	public HashMap<String, ArrayList<String>> getCnaUnreachable() {
+		return cna_unreachable;
 	}
 	/*
 	 * initialize one/two instance(s) of APKeeper according to the operation mode
@@ -339,25 +339,24 @@ public class Network {
 	}
 
 	/*
-	 * for each element, check if its target DNA is reachable
+	 * for each element, check if its target CNA is reachable
 	 */
 	public void blackHoleChecker(Evaluator eva) throws ElementNotFoundException{
-		dna_unreachable.clear();
+		cna_unreachable.clear();
 		for ( String element_name : elements.keySet()) {
-			checker.getDNAReachable().clear();
+			checker.getCNAReachable().clear();
 			Element e = elements.get(element_name);
 			Set<Integer> aps = e.getTargetBDD();
 			checker.checkProperty(element_name, aps,true);
-			HashSet<String> target_dna = APKeeper.getAPPrefixes(aps);
-			for(String dna : target_dna) {
-				String[] token = dna.split("/");
-				if(!checker.getDNAReachable().contains(token[0])) {
-					dna_unreachable.putIfAbsent(element_name, new ArrayList<>());
-					dna_unreachable.get(element_name).add(token[0]);
+			HashSet<String> target_cna = APKeeper.getAPPrefixes(aps);
+			for(String cna : target_cna) {
+				if(!checker.getCNAReachable().contains(cna)) {
+					cna_unreachable.putIfAbsent(element_name, new ArrayList<>());
+					cna_unreachable.get(element_name).add(cna);
 				}
 			}
 		}
-		eva.addBlackHole(dna_unreachable);
+		eva.addBlackHole(cna_unreachable);
 	}
 	
 	public void updateRule(Evaluator eva, String rule) throws Exception {
@@ -386,7 +385,7 @@ public class Network {
 			checkProperty(eva, device, moved_aps);
 		}
 		
-		softMergeAPBatch();
+		// softMergeAPBatch();
 		
 		eva.endUpdate();
 		eva.printUpdateResults(getAPNum());
@@ -413,7 +412,7 @@ public class Network {
 		Rule r = e.encodeOneRule(rule);
 
 		// add targetBDD used for BlackHole checker exclude self
-		if(!rule.split(" ")[5].equals("self")) {
+		if(!rule.split(" ")[4].equals("self")) {
 			e.getTargetBDD().add(r.getMatch_bdd());
 		}
 

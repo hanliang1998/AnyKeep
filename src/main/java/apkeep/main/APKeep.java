@@ -140,7 +140,7 @@ public class APKeep {
 	}
 
 	public static void dumpBlackHole(PrintStream printer) {
-		printer.println(net.getDnaUnreachable());
+		printer.println(net.getCnaUnreachable());
 	}
 	
 	public static ArrayList<String> readFile(String inputFile) throws IOException{

@@ -86,13 +86,19 @@ public class ForwardElement extends Element {
 	public Rule encodeOneRule(String rule) {
 		String[] tokens = rule.split(" ");
 		long prefix = Long.valueOf(tokens[3]);
-		int prefixlen = Integer.valueOf(tokens[4]);
-		String port = tokens[5];
-		int priority = Integer.valueOf(tokens[6]);
+		// int prefixlen = Integer.valueOf(tokens[4]);
+		// String port = tokens[5];
+		// int priority = Integer.valueOf(tokens[6]);
 		
-		int match_bdd = apk.encodePrefixBDD(prefix, prefixlen);
+		// CNA 没有掩码
+		String port = tokens[4];
+		int priority = Integer.valueOf(tokens[5]);
 		
-		return new ForwardingRule(match_bdd, prefix, prefixlen, port, priority);
+		// int match_bdd = apk.encodePrefixBDD(prefix, prefixlen);
+		int match_bdd = apk.encodePrefixBDD(prefix);
+		
+		// return new ForwardingRule(match_bdd, prefix, prefixlen, port, priority);
+		return new ForwardingRule(match_bdd, prefix, port, priority);
 	}
 
 	@Override
