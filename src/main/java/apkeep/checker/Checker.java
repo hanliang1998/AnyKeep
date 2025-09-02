@@ -151,23 +151,7 @@ public class Checker {
 			if (port.equals("default") || e.getPortAPs(port).isEmpty()) continue;
 			
 			Set<Integer> aps = new HashSet<>(moved_aps);
-			HashSet<String> target_cna1 = APKeeper.getAPPrefixes(moved_aps);
-			Boolean flag = false;
-			if(target_cna1.contains("10.6.0.14")){
-				flag = true;
-			}
-			HashSet<String> target_cna = APKeeper.getAPPrefixes(e.getPortAPs(port));
-			Boolean flag2 = false;
-			if(target_cna.contains("10.6.0.14")){
-				flag2 = true;
-			}
 			aps.retainAll(e.getPortAPs(port));
-			HashSet<String> target_cna2 = APKeeper.getAPPrefixes(aps);
-			Boolean flag3 = false;
-			if(target_cna2.contains("10.6.0.14")){
-				flag3 = true;
-			}
-			
 			if(aps.isEmpty()) continue;
 			Set<String> ports = getPhysicalPorts(e,port);
 			for(String next_port : ports) {
