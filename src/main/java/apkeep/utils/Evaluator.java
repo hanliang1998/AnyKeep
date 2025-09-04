@@ -227,6 +227,10 @@ public class Evaluator {
 			printer.println(loop);
 		}
 	}
+
+	public void printBlackHole(PrintStream printer) {
+		printer.println(cna_unreachable);
+	}
 	
 
 	public void addLinkFailure(int total_links2, long construction_time2, long detection_time2) {

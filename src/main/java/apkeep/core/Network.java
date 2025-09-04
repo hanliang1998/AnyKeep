@@ -347,16 +347,9 @@ public class Network {
 			checker.getCNAReachable().clear();
 			Element e = elements.get(element_name);
 			Set<Integer> aps = e.getTargetBDD();
-			checker.checkProperty(element_name, aps,true);
-			HashSet<String> target_cna = APKeeper.getAPPrefixes(aps);
-			for(String cna : target_cna) {
-				if(!checker.getCNAReachable().contains(cna)) {
-					cna_unreachable.putIfAbsent(element_name, new ArrayList<>());
-					cna_unreachable.get(element_name).add(cna);
-				}
-			}
+			checker.checkProperty(element_name, aps,true);		
 		}
-		eva.addBlackHole(cna_unreachable);
+		eva.addBlackHole(checker.getCNAUnreachable());
 	}
 	
 	public void updateRule(Evaluator eva, String rule) throws Exception {

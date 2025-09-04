@@ -58,15 +58,21 @@ public class Checker {
 	Network net;
 	Set<Loop> loops;
 	Set<String> cna_reachable;
+	HashMap<String, ArrayList<String>> cna_unreachable;
 	
 	public Checker(Network net) {
 		this.net = net;
 		loops = new HashSet<>();
 		cna_reachable = new HashSet<>();
+		cna_unreachable = new HashMap<>();
 	}
 
 	public Set<String> getCNAReachable() {
 		return cna_reachable;
+	}
+
+	public HashMap<String, ArrayList<String>> getCNAUnreachable() {
+		return cna_unreachable;
 	}
 
 	public Set<Loop> getLoops() {
@@ -158,6 +164,31 @@ public class Checker {
 				PositionTuple next_hop = new PositionTuple(element_name, next_port);
 				ArrayList<PositionTuple> history = new ArrayList<>();
 				traversePPM(next_hop, aps, history);
+				if(isCheckBlackHole){
+					if(net.getConnectedPorts(next_hop) == null) continue;
+					for(PositionTuple connected_pt : net.getConnectedPorts(next_hop)){
+						String next_node = connected_pt.getDeviceName();
+						Element next_element = getElement(next_node);
+						Set<Integer> next_element_ports_aps = new HashSet<>();
+						for (String next_element_port : next_element.getPorts()) {
+							if (next_element_port.equals("default") || next_element.getPortAPs(next_element_port).isEmpty()) continue;
+							next_element_ports_aps.addAll(next_element.getPortAPs(next_element_port));
+						}
+						
+						// remove the ap that can be forwarded to next element
+						aps.removeAll(next_element_ports_aps);
+						if(aps.isEmpty()) continue;
+						HashSet<String> forward_less = APKeeper.getAPPrefixes(aps);
+						for (String cna : forward_less) {
+							if(!cna_reachable.contains(cna)){
+								cna_unreachable.putIfAbsent(next_node, new ArrayList<>());
+								if(!cna_unreachable.get(next_node).contains(cna)){
+									cna_unreachable.get(next_node).add(cna);
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
